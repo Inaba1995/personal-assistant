@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+coverage/
+
+.env
+.env.local
+
+prisma/*.db
+prisma/*.db-journal
+prisma/dev.db
+prisma/test.db
+
+*.log
+.DS_Store
+.vite/

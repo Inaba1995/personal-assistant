@@ -1,0 +1,49 @@
+{
+  "name": "personal-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Персональный ассистент — приложение для ведения офисной рутины",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "ensure-env": "node scripts/ensure-env.mjs",
+    "dev": "npm run ensure-env && prisma generate && prisma db push && prisma db seed && concurrently -n shared,api,web -c cyan,magenta,green \"npm:dev:shared\" \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:shared": "npm run dev --workspace @assistant/shared",
+    "dev:api": "npm run dev --workspace @assistant/api",
+    "dev:web": "npm run dev --workspace @assistant/web",
+    "build": "npm run build --workspace @assistant/shared && prisma generate && npm run build --workspace @assistant/api && npm run build --workspace @assistant/web",
+    "start": "npm run start --workspace @assistant/api",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "typecheck": "npm run build --workspace @assistant/shared && npm run typecheck --workspaces --if-present",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma db push --force-reset && prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/node": "^22.10.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.15.0",
+    "prettier": "^3.4.0",
+    "prisma": "^6.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.16.0"
+  },
+  "allowScripts": {
+    "prisma@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "@prisma/client@6.19.3": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.25.12": true
+  }
+}

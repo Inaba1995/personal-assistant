@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Тёмная тема переключается классом .dark на <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    'Inter', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 dark:bg-slate-700;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+}
+
+/* Примеси (Tailwind v4: @apply не работает с пользовательскими классами,
+   поэтому базовые стили продублированы в каждой кнопке). */
+@layer components {
+  /* На узких экранах поля ввода — 16px, иначе iOS Safari зумит страницу при фокусе. */
+  @media (max-width: 640px) {
+    .input {
+      font-size: 16px;
+    }
+  }
+  .btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800;
+  }
+  .btn-danger {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-rose-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100;
+  }
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+  }
+  .label {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400;
+  }
+}
