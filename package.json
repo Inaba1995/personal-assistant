@@ -13,7 +13,7 @@
     "dev:shared": "npm run dev --workspace @assistant/shared",
     "dev:api": "npm run dev --workspace @assistant/api",
     "dev:web": "npm run dev --workspace @assistant/web",
-    "build": "npm run build --workspace @assistant/shared && prisma generate && npm run build --workspace @assistant/api && npm run build --workspace @assistant/web",
+    "build": "node scripts/ensure-env.mjs && npm run build --workspace @assistant/shared && prisma generate && npm run build --workspace @assistant/api && npm run build --workspace @assistant/web",
     "start": "npm run start --workspace @assistant/api",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint .",
@@ -28,14 +28,19 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "prisma": "^6.1.0",
+    "tsx": "^4.19.2"
+  },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@types/node": "^22.10.0",
     "concurrently": "^9.1.0",
     "eslint": "^9.15.0",
     "prettier": "^3.4.0",
-    "prisma": "^6.1.0",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0"
   },

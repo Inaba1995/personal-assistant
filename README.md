@@ -44,6 +44,42 @@ npm start          # API на :4000 отдаёт и API, и собранный �
 | `npm run db:reset` | Сброс SQLite + повторный сид |
 | `npm run db:studio` | Prisma Studio (просмотр БД) |
 
+## Деплой на Railway
+
+Репозиторий подготовлен к Railway: в корне лежит `railway.toml` — он сам задаёт
+сборку и запуск, руками команды вводить не нужно:
+
+- **Build:** `npm run build` (shared → Prisma Client → API → фронт)
+- **Start:** `prisma db push` (схема) → `prisma db seed` (демо-данные, идемпотентно) →
+  `node apps/api/dist/index.js` — API отдаёт и REST, и собранный фронт
+- **Healthcheck:** `GET /health`
+
+Порядок действий в дашборде Railway (сервис → вкладка **Settings**):
+
+1. **Variables** — добавь:
+
+   | Переменная | Значение |
+   |---|---|
+   | `DATABASE_URL` | `file:/data/dev.db` (с volume, см. п. 2) или `file:/tmp/dev.db` (быстрый старт, данные сбрасываются при каждом деплое) |
+   | `JWT_SECRET` | `openssl rand -hex 32` |
+   | `JWT_REFRESH_SECRET` | `openssl rand -hex 32` (другое, не как JWT_SECRET) |
+   | `CORS_ORIGIN` | `https://<имя-сервиса>.up.railway.app` |
+   | `OPENAI_API_KEY` | опционально, `sk-…` — без него ИИ работает в режиме заглушки |
+   | `NIXPACKS_NODE_VERSION` | `24` |
+
+   ⚠️ **`NODE_ENV` не ставь** — иначе установка уйдёт в production-режим и на этапе
+   сборки не будет `typescript`/`vite`.
+
+2. **Volume (persistent SQLite)** — вкладка **Volumes → Create Volume**:
+   mount path `/data`, регион должен совпадать с регионом сервиса (например, US West).
+   Без volume база будет жить во временной файловой системе и **обнуляться при каждом
+   деплое/перезапуске**.
+
+3. Нажми **Apply changes → Deploy**. После сборки сервис поднимется на домене
+   `https://<имя-сервиса>.up.railway.app` — с этого адреса доступны и интерфейс, и API.
+
+Логин после деплоя: `user1@demo.local` / `Demo1234!` (сид выполняется при старте).
+
 ## Стек и обоснование зависимостей
 
 **Frontend:** React 19 + TypeScript + Vite 6, TailwindCSS 4, React Router 7, TanStack Query 5.

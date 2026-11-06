@@ -1,0 +1,14 @@
+# Конфигурация деплоя на Railway (https://railway.com).
+# Файл лежит в корне репозитория и читается автоматически при деплое.
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm run build"
+
+[deploy]
+# 1) применяем схему БД (idempotent), 2) сид демо-данных (идемпотентный), 3) старт API,
+# который отдаёт и REST, и собранный фронт из apps/web/dist.
+startCommand = "npx prisma db push --skip-generate && npx prisma db seed && node apps/api/dist/index.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
